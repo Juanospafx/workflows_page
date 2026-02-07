@@ -1,0 +1,38 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+#login-section {
+    background: linear-gradient(135deg, #ece9e6 0%, #ffffff 100%);
+}
+
+.list-group-item.active {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.list-group-item {
+    cursor: pointer;
+    border: none;
+    border-radius: 0.5rem !important;
+    margin-bottom: 0.25rem;
+    transition: background-color 0.2s;
+}
+
+.list-group-item:hover:not(.active) {
+    background-color: #e9ecef;
+}
+
+/* Custom scrollbar for sidebar */
+aside::-webkit-scrollbar {
+    width: 6px;
+}
+aside::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 3px;
+}
+
+#workflow-content {
+    transition: opacity 0.3s ease-in-out;
+}
