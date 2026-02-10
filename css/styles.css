@@ -7,7 +7,7 @@
     
     --text-primary: #0f172a; /* Slate-900 */
     --text-secondary: #64748b; /* Slate-500 */
-    --text-muted: #94a3b8;   /* Slate-400 */
+    --text-muted: #525b69;   /* Slate-400 */
     
     --border-subtle: #e2e8f0; /* Slate-200 */
     --border-focus: #3b82f6;  /* Blue-500 */
@@ -33,7 +33,7 @@
     /* 2. TEXTOS */
     --text-primary: #ffffff; /* Blanco puro para máxima legibilidad */
     --text-secondary: #94a3b8; /* Slate-400 */
-    --text-muted: #58657a;   /* Gris medio */
+    --text-muted: #8696af;   /* Gris medio */
     
     /* 3. BORDES */
     --border-subtle: #2f384a; /* Gris azulado sutil */
@@ -176,10 +176,24 @@ select.input-std, select.input-custom {
 
 /* --- RESPONSIVE --- */
 @media (max-width: 900px) {
-    body { flex-direction: column; height: auto; overflow-y: auto; }
-    .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border-subtle); padding: 1.5rem; order: 1; }
-    .main-content { overflow: visible; order: 2; }
-    .top-bar { position: sticky; top: 0; }
+    body { display: block; height: auto; overflow-y: auto; }
+    
+    #app-section {
+        flex-direction: column !important;
+    }
+
+    .sidebar { 
+        width: 100%; 
+        height: auto; 
+        border-right: none; 
+        border-bottom: 6px solid var(--border-subtle); /* Límite visual claro */
+        padding: 1.5rem; 
+        flex-shrink: 0;
+    }
+    
+    .main-content { overflow: visible; height: auto; }
+    .top-bar { position: static; }
+    .workspace { display: block; overflow: visible; height: auto; padding-bottom: 3rem; }
 }
 
 /* --- PRINT --- */
@@ -267,4 +281,34 @@ select.input-std, select.input-custom {
 
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
     filter: brightness(0.9);
+}
+
+/* --- DROP ZONE --- */
+.drop-zone {
+    border: 2px dashed var(--border-subtle);
+    border-radius: 1rem;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: var(--bg-input);
+    position: relative;
+}
+
+.drop-zone:hover, .drop-zone.dragover {
+    border-color: var(--accent-primary);
+    background-color: rgba(251, 90, 58, 0.05); /* Tinte naranja muy suave */
+}
+
+.drop-zone i { transition: color 0.2s ease; }
+.drop-zone:hover i, .drop-zone.dragover i { color: var(--accent-primary) !important; }
+
+/* Evita parpadeos al arrastrar sobre los hijos */
+.drop-zone * { pointer-events: none; }
+
+.file-item {
+    background: var(--bg-panel); border: 1px solid var(--border-subtle);
+    border-radius: 0.5rem; padding: 0.75rem 1rem; margin-bottom: 0.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.9rem; font-weight: 600; color: var(--text-primary);
 }

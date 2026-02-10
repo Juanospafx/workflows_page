@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="dark">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,7 +34,7 @@
             <!-- Main Content -->
             <main class="main-content">
                 <header class="top-bar">
-                    <h1>Selecciona un workflow</h1>
+                    <h1>Choose a Workflow</h1>
                     <div class="d-flex align-items-center gap-3">
                         <span class="badge bg-secondary rounded-pill">Brigtronix</span>
                     </div>
@@ -46,12 +46,18 @@
                         <p id="wf-description" class="text-secondary mb-5">Description goes here.</p>
 
                         <div class="mb-4 w-100 mx-auto" style="max-width: 500px;">
-                            <label for="file-upload" class="input-label">Subir archivo(s) para procesar</label>
-                            <input class="input-std" type="file" id="file-upload" multiple>
+                            <label class="input-label">Upload file(s) to process</label>
+                            <div id="drop-zone" class="drop-zone">
+                                <i class="fa-solid fa-cloud-arrow-up fs-2 mb-2 text-muted"></i>
+                                <p class="mb-1 fw-bold" style="font-size: 0.9rem;">Drag & Drop files here</p>
+                                <p class="small text-secondary mb-0">or click to browse</p>
+                                <input type="file" id="file-upload" multiple style="display: none;">
+                            </div>
+                            <div id="file-list-display" class="mt-3 text-start"></div>
                         </div>
 
                         <button id="run-workflow-btn" class="btn btn-primary btn-lg px-5 mb-4">
-                            <span id="btn-text">Ejecutar workflow</span>
+                            <span id="btn-text">Run Workflow</span>
                             <span id="btn-spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                         </button>
 
@@ -61,7 +67,7 @@
                     </div>
                     
                     <div id="empty-state" class="h-100 d-flex justify-content-center align-items-center">
-                        <p style="font-size: 1.2rem; color: var(--text-muted);">Selecciona un workflow del menú lateral para comenzar.</p>
+                        <p style="font-size: 1.2rem; color: var(--text-muted);">Select a workflow from the sidebar to start.</p>
                     </div>
                 </div>
             </main>
