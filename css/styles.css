@@ -49,9 +49,10 @@
 * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
 
 body { 
-    margin: 0; font-family: 'Inter', sans-serif; 
+    margin: 0; font-family: 'Poppins', sans-serif; 
     background-color: var(--bg-app); color: var(--text-primary); 
-    height: 100vh; display: flex; overflow: hidden; 
+    height: 100vh; display: flex; overflow: hidden;
+    font-weight: 400; /* Establecer el peso base a regular */
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -114,8 +115,8 @@ body {
 .workspace { padding: 2rem; overflow-y: auto; flex: 1; scroll-behavior: smooth; display: flex; }
 
 /* --- TEXTOS --- */
-h1 { font-size: 1.25rem; font-weight: 900; margin: 0; color: var(--text-primary); letter-spacing: -0.02em; }
-h2 { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin: 2rem 0 1rem 0; }
+h1 { font-size: 1.25rem; font-weight: 700; margin: 0; color: var(--text-primary); letter-spacing: -0.02em; }
+h2 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin: 2rem 0 1rem 0; }
 
 /* --- TARJETAS --- */
 .card-box { 
@@ -139,13 +140,13 @@ h2 { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spac
 }
 
 /* --- INPUTS --- */
-.input-label { font-size: 0.7rem; font-weight: 800; color: var(--text-muted); display: block; margin-bottom: 0.4rem; text-transform: uppercase; }
+.input-label { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 0.4rem; text-transform: uppercase; }
 
 .input-std, .input-custom { 
     width: 100%; padding: 0.8rem 1rem;
     border: 1px solid var(--border-subtle); border-radius: 0.75rem; 
     background: var(--bg-input); color: var(--text-primary); 
-    font-weight: 600; font-family: 'Inter', sans-serif; font-size: 0.9rem;
+    font-weight: 400; font-family: 'Poppins', sans-serif; font-size: 0.9rem;
     appearance: none; transition: 0.2s;
 }
 .input-std:focus, .input-custom:focus { border-color: var(--border-focus); }
@@ -160,7 +161,7 @@ select.input-std, select.input-custom {
 .btn-icon-only { background: transparent; border: none; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
 .btn-icon-only:hover { color: var(--accent-primary); } 
 
-.btn-toggle { padding: 0.35rem 0.85rem; border-radius: 99px; font-size: 0.7rem; font-weight: 900; cursor: pointer; border: none; transition: 0.2s; }
+.btn-toggle { padding: 0.35rem 0.85rem; border-radius: 99px; font-size: 0.7rem; font-weight: 700; cursor: pointer; border: none; transition: 0.2s; }
 .btn-toggle.active { background: var(--accent-bg); color: var(--accent-primary); }
 .btn-toggle.inactive { background: var(--bg-input); color: var(--text-muted); }
 .opacity-40 { opacity: 0.4; pointer-events: none; }
@@ -247,7 +248,7 @@ select.input-std, select.input-custom {
     background: transparent;
     border-radius: 1rem !important; /* AUMENTADO: Más redondeado */
     color: var(--text-secondary);
-    font-weight: 700;
+    font-weight: 600;
     font-size: 1.05rem; /* AUMENTADO: Texto más grande */
     cursor: pointer;
     transition: all 0.2s ease;
@@ -310,5 +311,5 @@ select.input-std, select.input-custom {
     background: var(--bg-panel); border: 1px solid var(--border-subtle);
     border-radius: 0.5rem; padding: 0.75rem 1rem; margin-bottom: 0.5rem;
     display: flex; align-items: center; justify-content: space-between;
-    font-size: 0.9rem; font-weight: 600; color: var(--text-primary);
+    font-size: 0.9rem; font-weight: 400; color: var(--text-primary);
 }
