@@ -6,6 +6,8 @@ const WORKFLOWS = [
     {
         id: 'attendance-report',
         name: 'Reporte de asistencias',
+        icon: 'fa-solid fa-clipboard-user',
+        colorClass: 'text-blue',
         description: 'Genera un reporte a partir del archivo de asistencias subido.',
         uploadEndpoint: `${N8N_WEBHOOK_BASE}/attendance-report/upload`,
         resultEndpoint: null,
@@ -16,6 +18,8 @@ const WORKFLOWS = [
     {
         id: 'po-classifier',
         name: 'Clasificador órdenes de compra',
+        icon: 'fa-solid fa-file-invoice-dollar',
+        colorClass: 'text-green',
         description: 'Clasifica órdenes de compra a partir del archivo cargado.',
         uploadEndpoint: `${N8N_WEBHOOK_BASE}/po-classifier/upload`,
         returnsFile: false,
@@ -25,6 +29,8 @@ const WORKFLOWS = [
     {
         id: 'ex-notas',
         name: 'Extractor de Notas',
+        icon: 'fa-solid fa-note-sticky',
+        colorClass: 'text-yellow',
         description: 'Clasificador alterno, solo sube el archivo a la carpeta de la empresa.',
         uploadEndpoint: `${N8N_WEBHOOK_BASE}/ex-notas/upload`,
         resultEndpoint: null,
@@ -36,6 +42,8 @@ const WORKFLOWS = [
     {
         id: 'po-classifier-secondary',
         name: 'Clasificador órdenes de compra de Secundary',
+        icon: 'fa-solid fa-file-invoice',
+        colorClass: 'text-orange',
         description: 'Clasificador alterno, solo sube el archivo a la carpeta de la empresa.',
         uploadEndpoint: `${N8N_WEBHOOK_BASE}/po-classifier-secondary/upload`,
         resultEndpoint: null,
@@ -138,7 +146,7 @@ function renderWorkflows() {
     WORKFLOWS.forEach(wf => {
         const btn = document.createElement('button');
         btn.className = 'list-group-item list-group-item-action';
-        btn.textContent = wf.name;
+        btn.innerHTML = `<i class="${wf.icon} ${wf.colorClass} me-3 fs-5"></i> ${wf.name}`;
         btn.onclick = () => selectWorkflow(wf, btn);
         workflowList.appendChild(btn);
     });

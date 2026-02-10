@@ -1,38 +1,270 @@
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f8f9fa;
+/* --- SISTEMA DE COLOR (VARIABLES) --- */
+:root {
+    /* Paleta Base (Light Mode - INTACTO) */
+    --bg-app: #f8fafc;       /* Slate-50 */
+    --bg-panel: #ffffff;     /* White */
+    --bg-input: #f8fafc;     /* Slate-50 */
+    
+    --text-primary: #0f172a; /* Slate-900 */
+    --text-secondary: #64748b; /* Slate-500 */
+    --text-muted: #94a3b8;   /* Slate-400 */
+    
+    --border-subtle: #e2e8f0; /* Slate-200 */
+    --border-focus: #3b82f6;  /* Blue-500 */
+
+    --accent-primary: #fb5a3a; /* Brightronix Orange */
+    --accent-bg: #fff1f2;      /* Orange-50 (Light) */
+    
+    --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    
+    /* Colores auxiliares para botones */
+    --blue-500: #3b82f6; 
+    --emerald-500: #10b981;
+    --amber-500: #f59e0b;
 }
 
-#login-section {
-    background: linear-gradient(135deg, #ece9e6 0%, #ffffff 100%);
+/* --- DARK MODE OVERRIDES (DEEP MATTE THEME) --- */
+[data-theme="dark"] {
+    /* 1. FONDOS: Ajustados al estilo "Matte Blue-Grey" de la imagen */
+    --bg-app: #1b212d;       /* Fondo general: Azul grisáceo profundo */
+    --bg-panel: #242a38;     /* Paneles: Un tono ligeramente más claro para contraste */
+    --bg-input: #151a23;     /* Inputs: Más oscuros para profundidad */
+    
+    /* 2. TEXTOS */
+    --text-primary: #ffffff; /* Blanco puro para máxima legibilidad */
+    --text-secondary: #94a3b8; /* Slate-400 */
+    --text-muted: #58657a;   /* Gris medio */
+    
+    /* 3. BORDES */
+    --border-subtle: #2f384a; /* Gris azulado sutil */
+    --border-focus: #fb5a3a;  /* Naranja al enfocar */
+
+    /* 4. ACENTOS */
+    --accent-primary: #fb5a3a; /* Mismo Naranja */
+    --accent-bg: #3a1d18;      /* Fondo naranja muy oscuro y transparente */
+    
+    --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.4); /* Sombra suave y difusa */
 }
 
-.list-group-item.active {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
+* { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+
+body { 
+    margin: 0; font-family: 'Inter', sans-serif; 
+    background-color: var(--bg-app); color: var(--text-primary); 
+    height: 100vh; display: flex; overflow: hidden; 
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+/* --- SIDEBAR --- */
+.sidebar { 
+    width: 380px; background: var(--bg-panel); 
+    border-right: 1px solid var(--border-subtle); 
+    display: flex; flex-direction: column; z-index: 20; padding: 2rem; 
+    overflow-y: auto; flex-shrink: 0; 
+    box-shadow: 4px 0 24px rgba(0,0,0,0.02);
+    transition: background 0.3s, border 0.3s;
+}
+
+/* --- LOGO STYLES (MEJORADO) --- */
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.logo-full {
+    height: 4rem; /* AUMENTADO: Logo más grande */
+    width: auto;
+    display: block;
+    object-fit: contain;
+    transition: filter 0.3s ease;
+}
+
+.app-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-top: -0.5rem;
+    margin-left: 0.5rem;
+}
+
+/* Inversión inteligente de color para el logo en modo oscuro */
+[data-theme="dark"] .logo-full {
+     filter: brightness(0) invert(1) opacity(0.9);
+}
+
+/* --- MAIN CONTENT --- */
+.main-content { 
+    flex: 1; display: flex; flex-direction: column; 
+    background: var(--bg-app); overflow: hidden; position: relative;
+    transition: background 0.3s;
+}
+
+/* Top Bar */
+.top-bar {
+    background: var(--bg-panel); border-bottom: 1px solid var(--border-subtle); 
+    padding: 1.25rem 2rem; display: flex; justify-content: space-between; 
+    align-items: center; flex-shrink: 0; z-index: 10;
+    transition: background 0.3s, border 0.3s;
+}
+
+.workspace { padding: 2rem; overflow-y: auto; flex: 1; scroll-behavior: smooth; display: flex; }
+
+/* --- TEXTOS --- */
+h1 { font-size: 1.25rem; font-weight: 900; margin: 0; color: var(--text-primary); letter-spacing: -0.02em; }
+h2 { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin: 2rem 0 1rem 0; }
+
+/* --- TARJETAS --- */
+.card-box { 
+    background: var(--bg-panel); border-radius: 1rem; 
+    border: 1px solid var(--border-subtle); 
+    box-shadow: var(--shadow-card);
+    transition: background 0.3s, border 0.3s;
+}
+
+/* --- BOTONES DE ACCIÓN --- */
+.btn-add {
+    width: 100%; padding: 1.25rem;
+    border: 1px solid var(--border-subtle); background: var(--bg-panel);
+    border-radius: 1rem; color: var(--text-secondary); font-weight: 700; font-size: 0.95rem;
+    cursor: pointer; display: flex; align-items: center; justify-content: flex-start; gap: 1rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); margin-bottom: 0.75rem;
+}
+.btn-add:hover { 
+    border-color: var(--border-focus); color: var(--accent-primary); 
+    background: var(--bg-app); transform: translateY(-1px);
+}
+
+/* --- INPUTS --- */
+.input-label { font-size: 0.7rem; font-weight: 800; color: var(--text-muted); display: block; margin-bottom: 0.4rem; text-transform: uppercase; }
+
+.input-std, .input-custom { 
+    width: 100%; padding: 0.8rem 1rem;
+    border: 1px solid var(--border-subtle); border-radius: 0.75rem; 
+    background: var(--bg-input); color: var(--text-primary); 
+    font-weight: 600; font-family: 'Inter', sans-serif; font-size: 0.9rem;
+    appearance: none; transition: 0.2s;
+}
+.input-std:focus, .input-custom:focus { border-color: var(--border-focus); }
+
+/* Fix para icono del select */
+select.input-std, select.input-custom {
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2394a3b8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat; background-position: right 1rem center; background-size: 0.65em auto;
+}
+
+/* Botones Pequeños */
+.btn-icon-only { background: transparent; border: none; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
+.btn-icon-only:hover { color: var(--accent-primary); } 
+
+.btn-toggle { padding: 0.35rem 0.85rem; border-radius: 99px; font-size: 0.7rem; font-weight: 900; cursor: pointer; border: none; transition: 0.2s; }
+.btn-toggle.active { background: var(--accent-bg); color: var(--accent-primary); }
+.btn-toggle.inactive { background: var(--bg-input); color: var(--text-muted); }
+.opacity-40 { opacity: 0.4; pointer-events: none; }
+
+/* Botón Tema */
+.theme-btn {
+    background: var(--bg-input); border: 1px solid var(--border-subtle);
+    color: var(--text-primary); width: 2.5rem; height: 2.5rem;
+    border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s ease;
+}
+.theme-btn:hover { background: var(--border-subtle); transform: rotate(15deg); color: var(--accent-primary); }
+
+/* --- RESPONSIVE --- */
+@media (max-width: 900px) {
+    body { flex-direction: column; height: auto; overflow-y: auto; }
+    .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border-subtle); padding: 1.5rem; order: 1; }
+    .main-content { overflow: visible; order: 2; }
+    .top-bar { position: sticky; top: 0; }
+}
+
+/* --- PRINT --- */
+@media print {
+    body > * { display: none !important; }
+    #printArea { 
+        display: block !important; 
+        position: absolute; 
+        top: 0; 
+        left: 0; 
+        width: 100%; 
+        background: white; 
+        color: black; 
+        padding: 1.5rem; /* Padding general para el área de impresión */
+    }
+    #printArea svg { width: 100% !important; height: auto !important; display: block; margin: 0 auto; }
+
+    /* Estilos para la tabla en el PDF */
+    #printArea table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; font-size: 10pt; }
+    #printArea th, #printArea td { 
+        border: 1px solid #bbb; 
+        padding: 8px 15px; /* AUMENTADO: Más espacio horizontal entre columnas */
+        text-align: left; 
+        vertical-align: top;
+    }
+    #printArea th { background-color: #f2f2f2; font-weight: bold; }
+    
+    :root {
+        --bg-app: white !important;
+        --bg-panel: white !important;
+        --text-primary: black !important;
+        --border-subtle: #ccc !important;
+    }
+}
+#printArea { display: none; }
+
+/* --- CUSTOM WORKFLOWS PAGE STYLES --- */
+.list-group {
+    border: none;
+}
+
+/* Utility classes for icon colors */
+.text-blue { color: var(--blue-500); }
+.text-green { color: var(--emerald-500); }
+.text-yellow { color: var(--amber-500); }
+.text-orange { color: var(--accent-primary); }
 
 .list-group-item {
+    padding: 1.25rem 1.5rem; /* AUMENTADO: Más espacio interno */
+    border: 1px solid transparent;
+    background: transparent;
+    border-radius: 1rem !important; /* AUMENTADO: Más redondeado */
+    color: var(--text-secondary);
+    font-weight: 700;
+    font-size: 1.05rem; /* AUMENTADO: Texto más grande */
     cursor: pointer;
-    border: none;
-    border-radius: 0.5rem !important;
-    margin-bottom: 0.25rem;
-    transition: background-color 0.2s;
+    transition: all 0.2s ease;
+    margin-bottom: 0.75rem; /* AUMENTADO: Más separación */
+    display: flex; align-items: center; /* Alineación centrada icono-texto */
 }
 
 .list-group-item:hover:not(.active) {
-    background-color: #e9ecef;
+    background: var(--bg-input);
+    color: var(--text-primary);
 }
 
-/* Custom scrollbar for sidebar */
-aside::-webkit-scrollbar {
-    width: 6px;
-}
-aside::-webkit-scrollbar-thumb {
-    background-color: #ccc;
-    border-radius: 3px;
+.list-group-item.active {
+    background: var(--accent-bg);
+    color: var(--accent-primary);
+    border-color: var(--accent-primary) !important; /* important to override bootstrap */
+    font-weight: 700;
 }
 
-#workflow-content {
-    transition: opacity 0.3s ease-in-out;
+/* --- BUTTON OVERRIDES --- */
+.btn-primary {
+    --bs-btn-bg: var(--accent-primary);
+    --bs-btn-border-color: var(--accent-primary);
+    --bs-btn-hover-bg: var(--accent-primary);
+    --bs-btn-hover-border-color: var(--accent-primary);
+    --bs-btn-active-bg: var(--accent-primary);
+    --bs-btn-active-border-color: var(--accent-primary);
+    --bs-btn-disabled-bg: var(--accent-primary);
+    --bs-btn-disabled-border-color: var(--accent-primary);
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+    filter: brightness(0.9);
 }
