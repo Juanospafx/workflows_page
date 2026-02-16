@@ -6,6 +6,8 @@ const WORKFLOWS = [
     {
         id: 'attendance-report',
         name: 'Reporte de asistencias',
+        icon: 'fa-solid fa-clipboard-user',
+        colorClass: 'text-blue',
         description: 'Genera un reporte a partir del archivo de asistencias subido.',
         uploadEndpoint: `${N8N_WEBHOOK_BASE}/attendance-report/upload`,
         resultEndpoint: null,
@@ -16,6 +18,8 @@ const WORKFLOWS = [
     {
         id: 'po-classifier',
         name: 'Clasificador órdenes de compra',
+        icon: 'fa-solid fa-file-invoice-dollar',
+        colorClass: 'text-green',
         description: 'Clasifica órdenes de compra a partir del archivo cargado.',
         uploadEndpoint: `${N8N_WEBHOOK_BASE}/po-classifier/upload`,
         returnsFile: false,
@@ -25,6 +29,8 @@ const WORKFLOWS = [
     {
         id: 'ex-notas',
         name: 'Extractor de Notas',
+        icon: 'fa-solid fa-note-sticky',
+        colorClass: 'text-yellow',
         description: 'Clasificador alterno, solo sube el archivo a la carpeta de la empresa.',
         uploadEndpoint: `${N8N_WEBHOOK_BASE}/ex-notas/upload`,
         resultEndpoint: null,
@@ -36,6 +42,8 @@ const WORKFLOWS = [
     {
         id: 'po-classifier-secondary',
         name: 'Clasificador órdenes de compra de Secundary',
+        icon: 'fa-solid fa-file-invoice',
+        colorClass: 'text-orange',
         description: 'Clasificador alterno, solo sube el archivo a la carpeta de la empresa.',
         uploadEndpoint: `${N8N_WEBHOOK_BASE}/po-classifier-secondary/upload`,
         resultEndpoint: null,
@@ -62,6 +70,8 @@ const emptyState = document.getElementById('empty-state');
 const wfTitle = document.getElementById('wf-title');
 const wfDescription = document.getElementById('wf-description');
 const fileUpload = document.getElementById('file-upload');
+const dropZone = document.getElementById('drop-zone');
+const fileListDisplay = document.getElementById('file-list-display');
 const runWorkflowBtn = document.getElementById('run-workflow-btn');
 const btnText = document.getElementById('btn-text');
 const btnSpinner = document.getElementById('btn-spinner');
@@ -71,6 +81,7 @@ const statusArea = document.getElementById('status-area');
 document.addEventListener('DOMContentLoaded', () => {
     checkSession();
     renderWorkflows();
+    setupDragAndDrop();
 });
 
 // Authentication Logic
@@ -138,7 +149,7 @@ function renderWorkflows() {
     WORKFLOWS.forEach(wf => {
         const btn = document.createElement('button');
         btn.className = 'list-group-item list-group-item-action';
-        btn.textContent = wf.name;
+        btn.innerHTML = `<i class="${wf.icon} ${wf.colorClass} me-3 fs-5"></i> ${wf.name}`;
         btn.onclick = () => selectWorkflow(wf, btn);
         workflowList.appendChild(btn);
     });
@@ -161,6 +172,7 @@ function selectWorkflow(wf, btnElement) {
 
     // Reset inputs
     fileUpload.value = '';
+    fileListDisplay.innerHTML = '';
     statusArea.innerHTML = '';
     resetButton();
 }
@@ -171,12 +183,12 @@ runWorkflowBtn.addEventListener('click', async () => {
     const files = Array.from(fileUpload.files);   // 🔹 TOMAMOS TODOS LOS ARCHIVOS
 
     if (!files.length) {
-        alert('Por favor selecciona al menos un archivo primero.');
+        alert('Please select at least one file first.');
         return;
     }
 
     setLoading(true);
-    statusArea.innerHTML = '<div class="alert alert-info">Procesando archivo(s)...</div>';
+    statusArea.innerHTML = '<div class="alert alert-info">Processing file(s)...</div>';
 
     try {
         await uploadFile(currentWorkflow, files);
@@ -191,17 +203,17 @@ runWorkflowBtn.addEventListener('click', async () => {
 function setLoading(isLoading) {
     runWorkflowBtn.disabled = isLoading;
     if (isLoading) {
-        btnText.textContent = 'Procesando...';
+        btnText.textContent = 'Processing...';
         btnSpinner.classList.remove('d-none');
     } else {
-        btnText.textContent = 'Ejecutar workflow';
+        btnText.textContent = 'Run Workflow';
         btnSpinner.classList.add('d-none');
     }
 }
 
 function resetButton() {
     runWorkflowBtn.disabled = false;
-    btnText.textContent = 'Ejecutar workflow';
+    btnText.textContent = 'Run Workflow';
     btnSpinner.classList.add('d-none');
 }
 
@@ -227,8 +239,8 @@ async function uploadFile(workflowConfig, files) {
 
     if (!response.ok) {
         const text = await response.text().catch(() => '');
-        console.error('Respuesta n8n (error):', text);
-        throw new Error('Error al subir archivo a n8n');
+        console.error('n8n response (error):', text);
+        throw new Error('Error uploading file to n8n');
     }
 
     // 👉 Si este workflow devuelve una URL (JSON con { driveUrl } / { Excel_Url } etc.)
@@ -238,26 +250,26 @@ async function uploadFile(workflowConfig, files) {
             data = await response.json();
         } catch (e) {
             const text = await response.text().catch(() => '');
-            console.error('Respuesta no JSON de n8n:', text);
-            throw new Error('La respuesta de n8n no es JSON válido');
+            console.error('Non-JSON response from n8n:', text);
+            throw new Error('n8n response is not valid JSON');
         }
 
         // ✅ Detectar qué campo trae la URL y adaptar el texto del botón
         const candidates = [
-            { key: 'driveUrl', label: 'Abrir reporte en Drive' },
-            { key: 'Excel_Url', label: 'Abrir reporte en Excel' },
-            { key: 'url', label: 'Abrir reporte' },
-            { key: 'webViewLink', label: 'Abrir reporte' }
+            { key: 'driveUrl', label: 'Open report in Drive' },
+            { key: 'Excel_Url', label: 'Open report in Excel' },
+            { key: 'url', label: 'Open report' },
+            { key: 'webViewLink', label: 'Open report' }
         ];
 
         const found = candidates.find(c => data && data[c.key]);
 
         if (!found) {
-            console.warn('Respuesta de n8n no trae URL conocida:', data);
+            console.warn('n8n response does not contain a known URL:', data);
             statusArea.innerHTML = `
                 <div class="alert alert-warning">
-                    El workflow terminó pero no se recibió la URL del reporte.<br>
-                    Revisa el nodo "Respond to Webhook" en n8n.
+                    The workflow finished but no report URL was received.<br>
+                    Check the "Respond to Webhook" node in n8n.
                 </div>
             `;
             return;
@@ -267,7 +279,7 @@ async function uploadFile(workflowConfig, files) {
 
         statusArea.innerHTML = `
             <div class="alert alert-success">
-                <p class="mb-2">¡Reporte generado correctamente!</p>
+                <p class="mb-2">Report generated successfully!</p>
                 <a href="${url}" target="_blank" rel="noopener" class="btn btn-success btn-sm">
                     ${found.label}
                 </a>
@@ -280,17 +292,17 @@ async function uploadFile(workflowConfig, files) {
     if (workflowConfig.returnsFile && workflowConfig.resultEndpoint) {
         await fetchResult(workflowConfig);
     } else {
-        statusArea.innerHTML = '<div class="alert alert-success">Archivo(s) subido(s) correctamente. El workflow se encarga del resto.</div>';
+        statusArea.innerHTML = '<div class="alert alert-success">File(s) uploaded successfully. The workflow handles the rest.</div>';
     }
 }
 
 async function fetchResult(workflowConfig) {
-    statusArea.innerHTML = '<div class="alert alert-info">Obteniendo resultado...</div>';
+    statusArea.innerHTML = '<div class="alert alert-info">Fetching result...</div>';
 
     const response = await fetch(workflowConfig.resultEndpoint);
 
     if (!response.ok) {
-        throw new Error('Error al obtener el resultado de n8n');
+        throw new Error('Error fetching result from n8n');
     }
 
     const blob = await response.blob();
@@ -298,10 +310,59 @@ async function fetchResult(workflowConfig) {
 
     statusArea.innerHTML = `
         <div class="alert alert-success">
-            <p class="mb-2">¡Proceso completado con éxito!</p>
-            <a href="${url}" download="resultado_${workflowConfig.id}" class="btn btn-success btn-sm">
-                Descargar resultado
+            <p class="mb-2">Process completed successfully!</p>
+            <a href="${url}" download="result_${workflowConfig.id}" class="btn btn-success btn-sm">
+                Download result
             </a>
         </div>
     `;
+}
+
+// Drag & Drop Logic
+function setupDragAndDrop() {
+    // Click to browse
+    dropZone.addEventListener('click', () => fileUpload.click());
+
+    // Input change (when browsing manually)
+    fileUpload.addEventListener('change', () => handleFiles(fileUpload.files));
+
+    // Drag events
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    // Highlight effect
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'), false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'), false);
+    });
+
+    // Handle Drop
+    dropZone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        fileUpload.files = files; // Update the hidden input
+        handleFiles(files);
+    }, false);
+}
+
+function handleFiles(files) {
+    fileListDisplay.innerHTML = '';
+    Array.from(files).forEach(file => {
+        const div = document.createElement('div');
+        div.className = 'file-item';
+        div.innerHTML = `
+            <span><i class="fa-regular fa-file me-2 text-muted"></i>${file.name}</span>
+            <span class="text-muted small">${(file.size / 1024).toFixed(1)} KB</span>
+        `;
+        fileListDisplay.appendChild(div);
+    });
 }
